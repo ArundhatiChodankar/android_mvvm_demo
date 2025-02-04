@@ -3,7 +3,6 @@ package com.example.mvvmdemoapplication.view.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -45,7 +44,7 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites), OnItemClickLi
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                val article = newsAdapter.differ.currentList[position]
+                val article = newsAdapter.dataList[position]
                 viewModel.deleteArticle(article)
                 view.snackbar("Successfully deleted article").apply {
                     setAction("Undo") {
@@ -60,9 +59,9 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites), OnItemClickLi
             attachToRecyclerView(binding.recyclerFavourites)
         }
 
-        viewModel.getSavedNews().observe(viewLifecycleOwner, Observer { articles ->
-            newsAdapter.differ.submitList(articles)
-        })
+        viewModel.getSavedNews().observe(viewLifecycleOwner) { articles ->
+            newsAdapter.setNewsList(articles)
+        }
     }
 
     private fun setupRecyclerView() {

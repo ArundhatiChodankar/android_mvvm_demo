@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.AbsListView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvmdemoapplication.R
 import com.example.mvvmdemoapplication.databinding.FragmentSearchBinding
 import com.example.mvvmdemoapplication.model.Article
-import com.example.mvvmdemoapplication.utils.Constants
 import com.example.mvvmdemoapplication.utils.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.mvvmdemoapplication.utils.Constants.Companion.SEARCH_NEWS_TIME_DELAY
 import com.example.mvvmdemoapplication.utils.Resource
@@ -48,20 +46,21 @@ class SearchFragment : Fragment(R.layout.fragment_search) ,OnItemClickListener{
 
         }
 
-        viewModel.searchNews.observe(viewLifecycleOwner, Observer { response ->
-            when(response) {
+        viewModel.searchNews.observe(viewLifecycleOwner) { response ->
+            when (response) {
                 is Resource.Success -> {
                     hideProgressBar()
                     hideErrorMessage()
                     response.data?.let { newsResponse ->
-                        newsAdapter.differ.submitList(newsResponse.articles.toList())
+                        newsAdapter.setNewsList(newsResponse.articles.toList())
                         val totalPages = newsResponse.totalResults / QUERY_PAGE_SIZE + 2
-                         isLastPage = viewModel.searchNewsPage == totalPages
-                        if(isLastPage) {
+                        isLastPage = viewModel.searchNewsPage == totalPages
+                        if (isLastPage) {
                             binding.recyclerSearch.setPadding(0, 0, 0, 0)
                         }
                     }
                 }
+
                 is Resource.Error -> {
                     hideProgressBar()
                     response.message?.let { message ->
@@ -69,11 +68,12 @@ class SearchFragment : Fragment(R.layout.fragment_search) ,OnItemClickListener{
                         showErrorMessage(message)
                     }
                 }
+
                 is Resource.Loading -> {
                     showProgressBar()
                 }
             }
-        })
+        }
     }
 
     private fun hideProgressBar() {
@@ -115,7 +115,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) ,OnItemClickListener{
             val isNotLoadingAndNotLastPage = !isLoading && !isLastPage
             val isAtLastItem = firstVisibleItemPosition + visibleItemCount >= totalItemCount
             val isNotAtBeginning = firstVisibleItemPosition >= 0
-            val isTotalMoreThanVisible = totalItemCount >= Constants.QUERY_PAGE_SIZE
+            val isTotalMoreThanVisible = totalItemCount >= QUERY_PAGE_SIZE
             val shouldPaginate = isNoErrors && isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning &&
                     isTotalMoreThanVisible && isScrolling
             if(shouldPaginate) {

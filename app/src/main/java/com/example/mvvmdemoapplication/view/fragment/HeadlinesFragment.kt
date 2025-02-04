@@ -3,9 +3,7 @@ package com.example.mvvmdemoapplication.view.fragment
 import android.os.Bundle
 import android.view.View
 import android.widget.AbsListView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +14,7 @@ import com.example.mvvmdemoapplication.model.Article
 import com.example.mvvmdemoapplication.utils.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.mvvmdemoapplication.utils.Resource
 import com.example.mvvmdemoapplication.utils.invisible
+import com.example.mvvmdemoapplication.utils.toast
 import com.example.mvvmdemoapplication.utils.visible
 import com.example.mvvmdemoapplication.view.OnItemClickListener
 import com.example.mvvmdemoapplication.view.activity.NewsActivity
@@ -50,33 +49,35 @@ class HeadlinesFragment : Fragment(R.layout.fragment_headlines), OnItemClickList
         }
 
 
-        viewModel.headlineNews.observe(viewLifecycleOwner, Observer { response ->
-            when(response) {
+        viewModel.headlineNews.observe(viewLifecycleOwner) { response ->
+            when (response) {
                 is Resource.Success -> {
                     hideProgressBar()
                     hideErrorMessage()
                     response.data?.let { newsResponse ->
-                        newsAdapter.differ.submitList(newsResponse.articles.toList())
+                        newsAdapter.setNewsList(newsResponse.articles.toList())
                         val totalPages = newsResponse.totalResults / QUERY_PAGE_SIZE + 2
-                         isLastPage = viewModel.headlinesNewsPage == totalPages
-                        if(isLastPage) {
+                        isLastPage = viewModel.headlinesNewsPage == totalPages
+                        if (isLastPage) {
                             isScrolling = false
                             binding.recyclerHeadlines.setPadding(0, 0, 0, 0)
                         }
                     }
                 }
+
                 is Resource.Error -> {
                     hideProgressBar()
                     response.message?.let { message ->
-                        Toast.makeText(activity, "An error occured: $message", Toast.LENGTH_LONG).show()
+                        activity?.toast("An error occured: $message")
                         showErrorMessage(message)
                     }
                 }
+
                 is Resource.Loading -> {
                     showProgressBar()
                 }
             }
-        })
+        }
     }
 
 
