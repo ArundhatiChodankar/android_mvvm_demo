@@ -19,6 +19,8 @@ import com.example.mvvmdemoapplication.databinding.FragmentArticleBinding
 import com.example.mvvmdemoapplication.databinding.FragmentHeadlinesBinding
 import com.example.mvvmdemoapplication.utils.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.mvvmdemoapplication.utils.Resource
+import com.example.mvvmdemoapplication.utils.invisible
+import com.example.mvvmdemoapplication.utils.visible
 import com.example.mvvmdemoapplication.view.activity.NewsActivity
 import com.example.mvvmdemoapplication.view.adapters.NewsAdapter
 import com.example.mvvmdemoapplication.viewmodel.NewsViewModel
@@ -122,22 +124,22 @@ class HeadlinesFragment : Fragment(R.layout.fragment_headlines) {
     }
 
     private fun hideProgressBar() {
-        binding.paginationProgressBar.visibility = View.INVISIBLE
+        binding.paginationProgressBar.invisible()
         isLoading = false
     }
 
     private fun showProgressBar() {
-        binding.paginationProgressBar.visibility = View.VISIBLE
+        binding.paginationProgressBar.visible()
         isLoading = true
     }
 
     private fun hideErrorMessage() {
-        binding.itemHeadlinesError.root.visibility = View.INVISIBLE
+        binding.itemHeadlinesError.root.invisible()
         isError = false
     }
 
     private fun showErrorMessage(message: String) {
-        binding.itemHeadlinesError.root.visibility = View.VISIBLE
+        binding.itemHeadlinesError.root.visible()
         binding.itemHeadlinesError.errorText.text = message
         isError = true
     }

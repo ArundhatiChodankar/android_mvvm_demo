@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import com.example.mvvmdemoapplication.R
 import com.example.mvvmdemoapplication.databinding.FragmentArticleBinding
+import com.example.mvvmdemoapplication.utils.snackbar
 import com.example.mvvmdemoapplication.view.activity.NewsActivity
 import com.example.mvvmdemoapplication.viewmodel.NewsViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -53,10 +54,10 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
         binding.fab.setOnClickListener {
             if (article.id == null) {
                 viewModel.saveArticle(article)
-                Snackbar.make(view, "Article saved successfully", Snackbar.LENGTH_SHORT).show()
+                view.snackbar("Article saved successfully")
             } else {
                viewModel.deleteArticle(article)
-                Snackbar.make(view, "Article deleted successfully", Snackbar.LENGTH_SHORT).show()
+                view.snackbar("Article deleted successfully")
 
             }
         }

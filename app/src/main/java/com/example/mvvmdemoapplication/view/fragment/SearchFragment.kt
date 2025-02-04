@@ -19,6 +19,9 @@ import com.example.mvvmdemoapplication.utils.Constants
 import com.example.mvvmdemoapplication.utils.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.mvvmdemoapplication.utils.Constants.Companion.SEARCH_NEWS_TIME_DELAY
 import com.example.mvvmdemoapplication.utils.Resource
+import com.example.mvvmdemoapplication.utils.invisible
+import com.example.mvvmdemoapplication.utils.toast
+import com.example.mvvmdemoapplication.utils.visible
 import com.example.mvvmdemoapplication.view.activity.NewsActivity
 import com.example.mvvmdemoapplication.view.adapters.NewsAdapter
 import com.example.mvvmdemoapplication.viewmodel.NewsViewModel
@@ -63,7 +66,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 is Resource.Error -> {
                     hideProgressBar()
                     response.message?.let { message ->
-                        Toast.makeText(activity, "An error occured: $message", Toast.LENGTH_LONG).show()
+                        activity?.toast("An error occured: $message")
                         showErrorMessage(message)
                     }
                 }
@@ -75,22 +78,22 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     }
 
     private fun hideProgressBar() {
-        binding.paginationProgressBar.visibility = View.INVISIBLE
+        binding.paginationProgressBar.invisible()
         isLoading = false
     }
 
     private fun showProgressBar() {
-        binding.paginationProgressBar.visibility = View.VISIBLE
+        binding.paginationProgressBar.visible()
         isLoading = true
     }
 
     private fun hideErrorMessage() {
-        binding.itemSearchError.root.visibility = View.INVISIBLE
+        binding.itemSearchError.root.invisible()
         isError = false
     }
 
     private fun showErrorMessage(message: String) {
-        binding.itemSearchError.root.visibility = View.VISIBLE
+        binding.itemSearchError.root.visible()
         binding.itemSearchError.errorText.text = message
         isError = true
     }

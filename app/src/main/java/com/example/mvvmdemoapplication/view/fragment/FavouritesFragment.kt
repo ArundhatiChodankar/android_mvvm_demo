@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvmdemoapplication.R
 import com.example.mvvmdemoapplication.databinding.FragmentFavouritesBinding
 import com.example.mvvmdemoapplication.databinding.FragmentHeadlinesBinding
+import com.example.mvvmdemoapplication.utils.snackbar
 import com.example.mvvmdemoapplication.view.activity.NewsActivity
 import com.example.mvvmdemoapplication.view.adapters.NewsAdapter
 import com.example.mvvmdemoapplication.viewmodel.NewsViewModel
@@ -61,7 +62,7 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
                 val position = viewHolder.adapterPosition
                 val article = newsAdapter.differ.currentList[position]
                 viewModel.deleteArticle(article)
-                Snackbar.make(view, "Successfully deleted article", Snackbar.LENGTH_LONG).apply {
+                view.snackbar("Successfully deleted article").apply {
                     setAction("Undo") {
                             viewModel.saveArticle(article)
                     }
