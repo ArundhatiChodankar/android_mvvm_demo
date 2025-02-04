@@ -10,12 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvmdemoapplication.R
 import com.example.mvvmdemoapplication.databinding.FragmentFavouritesBinding
+import com.example.mvvmdemoapplication.model.Article
 import com.example.mvvmdemoapplication.utils.snackbar
+import com.example.mvvmdemoapplication.view.OnItemClickListener
 import com.example.mvvmdemoapplication.view.activity.NewsActivity
 import com.example.mvvmdemoapplication.view.adapters.NewsAdapter
 import com.example.mvvmdemoapplication.viewmodel.NewsViewModel
 
-class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
+class FavouritesFragment : Fragment(R.layout.fragment_favourites), OnItemClickListener {
     private lateinit var binding: FragmentFavouritesBinding
     lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
@@ -27,17 +29,6 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
         viewModel = (activity as NewsActivity).viewModel
 
         setupRecyclerView()
-
-
-        newsAdapter.setOnItemClickListener {
-            val bundle = Bundle().apply {
-                putSerializable("article", it)
-            }
-            findNavController().navigate(
-                R.id.action_favouritesFragment_to_articleFragment,
-                bundle
-            )
-        }
 
 
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
@@ -75,10 +66,20 @@ class FavouritesFragment : Fragment(R.layout.fragment_favourites) {
     }
 
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter()
+        newsAdapter = NewsAdapter(this)
         binding.recyclerFavourites.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
         }
+    }
+
+    override fun onItemClick(article: Article) {
+        val bundle = Bundle().apply {
+            putSerializable("article", article)
+        }
+        findNavController().navigate(
+            R.id.action_favouritesFragment_to_articleFragment,
+            bundle
+        )
     }
 }

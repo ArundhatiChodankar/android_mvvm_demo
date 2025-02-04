@@ -12,17 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvmdemoapplication.R
 import com.example.mvvmdemoapplication.databinding.FragmentHeadlinesBinding
+import com.example.mvvmdemoapplication.model.Article
 import com.example.mvvmdemoapplication.utils.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.mvvmdemoapplication.utils.Resource
 import com.example.mvvmdemoapplication.utils.invisible
 import com.example.mvvmdemoapplication.utils.visible
+import com.example.mvvmdemoapplication.view.OnItemClickListener
 import com.example.mvvmdemoapplication.view.activity.NewsActivity
 import com.example.mvvmdemoapplication.view.adapters.NewsAdapter
 import com.example.mvvmdemoapplication.viewmodel.NewsViewModel
 import kotlinx.coroutines.launch
 
 
-class HeadlinesFragment : Fragment(R.layout.fragment_headlines) {
+class HeadlinesFragment : Fragment(R.layout.fragment_headlines), OnItemClickListener {
     private lateinit var binding: FragmentHeadlinesBinding
     lateinit var viewModel: NewsViewModel
     private lateinit var newsAdapter: NewsAdapter
@@ -47,15 +49,6 @@ class HeadlinesFragment : Fragment(R.layout.fragment_headlines) {
             }
         }
 
-        newsAdapter.setOnItemClickListener {
-            val bundle = Bundle().apply {
-                putSerializable("article", it)
-            }
-            findNavController().navigate(
-                R.id.action_headlinesFragment_to_articleFragment,
-                bundle
-            )
-        }
 
         viewModel.headlineNews.observe(viewLifecycleOwner, Observer { response ->
             when(response) {
@@ -139,11 +132,21 @@ class HeadlinesFragment : Fragment(R.layout.fragment_headlines) {
     }
 
     private fun setupRecyclerView() {
-        newsAdapter = NewsAdapter()
+        newsAdapter = NewsAdapter(this)
         binding.recyclerHeadlines.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
             addOnScrollListener(this@HeadlinesFragment.scrollListener)
         }
+    }
+
+    override fun onItemClick(article: Article) {
+        val bundle = Bundle().apply {
+            putSerializable("article", article)
+        }
+        findNavController().navigate(
+            R.id.action_headlinesFragment_to_articleFragment,
+            bundle
+        )
     }
 }

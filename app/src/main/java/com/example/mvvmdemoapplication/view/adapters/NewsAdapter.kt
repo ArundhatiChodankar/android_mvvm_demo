@@ -1,25 +1,30 @@
 package com.example.mvvmdemoapplication.view.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.mvvmdemoapplication.R
+import com.example.mvvmdemoapplication.databinding.ItemNewsBinding
 import com.example.mvvmdemoapplication.model.Article
-import org.w3c.dom.Text
+import com.example.mvvmdemoapplication.view.OnItemClickListener
 
-class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
+class NewsAdapter(private val onItemClickListener: OnItemClickListener): RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
-    private var onItemClickListener: ((Article) -> Unit)? = null
 
-    class ArticleViewHolder(itemView:View) :RecyclerView.ViewHolder(itemView)
+    class ArticleViewHolder(val binding: ItemNewsBinding) :RecyclerView.ViewHolder(binding.root){
+        fun bind(article: Article) {
+          binding.root.apply {
+              Glide.with(binding.root.context).load(article.urlToImage).into(binding.articleImage)
+              binding.articleSource.text = article.source?.name
+              binding.articleTitle.text = article.title
+              binding.articleDescription.text = article.description
+              binding.articleDateTime.text = article.publishedAt
+          }
+
+        }
+    }
 
     private  val differCallback = object : DiffUtil.ItemCallback<Article>(){
         override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
@@ -35,9 +40,9 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
     val differ = AsyncListDiffer(this, differCallback)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_news, parent, false)
-        return ArticleViewHolder(view)
+        val binding = ItemNewsBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false)
+        return ArticleViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -46,28 +51,11 @@ class NewsAdapter: RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = differ.currentList[position]
+        holder.bind(article)
 
-        val articleImage = holder.itemView.findViewById<ImageView>(R.id.articleImage)
-        val articleSource = holder.itemView.findViewById<TextView>(R.id.articleSource)
-        val articleTitle = holder.itemView.findViewById<TextView>(R.id.articleTitle)
-        val articleDescription = holder.itemView.findViewById<TextView>(R.id.articleDescription)
-        val articleDateTime = holder.itemView.findViewById<TextView>(R.id.articleDateTime)
-
-        holder.itemView.apply {
-            Glide.with(this).load(article.urlToImage).into(articleImage)
-            articleSource.text = article.source?.name
-            articleTitle.text = article.title
-            articleDescription.text = article.description
-            articleDateTime.text = article.publishedAt
-
-            setOnClickListener {
-                Log.d("TAG", "onBindViewHolder: " +article.toString())
-               onItemClickListener ?.let { it(article) }
-            }
+        holder.itemView.setOnClickListener{
+            onItemClickListener.onItemClick(article)
         }
     }
 
-    fun setOnItemClickListener(listener: (Article) -> Unit) {
-        onItemClickListener = listener
-    }
 }
