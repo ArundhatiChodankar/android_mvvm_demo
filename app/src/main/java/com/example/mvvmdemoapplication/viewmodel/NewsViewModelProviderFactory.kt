@@ -7,8 +7,13 @@ import com.example.mvvmdemoapplication.repository.NewsRepository
 class NewsViewModelProviderFactory(
     private val newsRepository: NewsRepository
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T =
-        modelClass.getConstructor(NewsRepository::class.java)
-            .newInstance(newsRepository)
 
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        // Check if the ViewModel class is NewsViewModel
+        if (modelClass.isAssignableFrom(NewsViewModel::class.java)) {
+            return NewsViewModel(newsRepository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
 }
+

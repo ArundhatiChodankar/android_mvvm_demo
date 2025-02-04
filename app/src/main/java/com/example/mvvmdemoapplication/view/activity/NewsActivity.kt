@@ -18,8 +18,8 @@ import com.example.mvvmdemoapplication.viewmodel.NewsViewModel
 import com.example.mvvmdemoapplication.viewmodel.NewsViewModelProviderFactory
 
 class NewsActivity : AppCompatActivity() {
-lateinit var viewModel: NewsViewModel
-    lateinit var binding: ActivityNewsBinding
+     lateinit var viewModel: NewsViewModel
+    private lateinit var binding: ActivityNewsBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNewsBinding.inflate(layoutInflater)
@@ -27,9 +27,11 @@ lateinit var viewModel: NewsViewModel
 
         val newsRepository = NewsRepository(ArticleDatabase(this))
         val viewModelProviderFactory = NewsViewModelProviderFactory(newsRepository)
+
         viewModel = ViewModelProvider(this, viewModelProviderFactory).get(NewsViewModel::class.java)
 
-        val newsNavHostFragment = supportFragmentManager.findFragmentById(R.id.newsNavHostFragment) as NavHostFragment
+        val newsNavHostFragment =
+            supportFragmentManager.findFragmentById(R.id.newsNavHostFragment) as NavHostFragment
         binding.bottomNavigationView.setupWithNavController(newsNavHostFragment.navController)
 
     }

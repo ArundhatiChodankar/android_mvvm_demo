@@ -1,21 +1,16 @@
 package com.example.mvvmdemoapplication.view.fragment
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.webkit.WebViewClient
 import android.widget.AbsListView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mvvmdemoapplication.R
-import com.example.mvvmdemoapplication.databinding.FragmentArticleBinding
 import com.example.mvvmdemoapplication.databinding.FragmentHeadlinesBinding
 import com.example.mvvmdemoapplication.utils.Constants.Companion.QUERY_PAGE_SIZE
 import com.example.mvvmdemoapplication.utils.Resource
@@ -24,7 +19,6 @@ import com.example.mvvmdemoapplication.utils.visible
 import com.example.mvvmdemoapplication.view.activity.NewsActivity
 import com.example.mvvmdemoapplication.view.adapters.NewsAdapter
 import com.example.mvvmdemoapplication.viewmodel.NewsViewModel
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
 

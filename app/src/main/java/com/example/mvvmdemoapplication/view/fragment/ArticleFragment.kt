@@ -1,21 +1,15 @@
 package com.example.mvvmdemoapplication.view.fragment
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.webkit.WebViewClient
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.example.mvvmdemoapplication.R
 import com.example.mvvmdemoapplication.databinding.FragmentArticleBinding
 import com.example.mvvmdemoapplication.utils.snackbar
 import com.example.mvvmdemoapplication.view.activity.NewsActivity
 import com.example.mvvmdemoapplication.viewmodel.NewsViewModel
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 class ArticleFragment : Fragment(R.layout.fragment_article) {
